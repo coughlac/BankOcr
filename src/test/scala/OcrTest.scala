@@ -109,4 +109,14 @@ class OcrTest extends org.scalatest.FunSuite {
 
     assert(accountNumber.charAt(0) === '9')
   }
+
+  test("recognises a nine followed by a eight"){
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      " _||_| _| _| _| _| _| _| _|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+    assert(accountNumber.charAt(0) === '9' && accountNumber.charAt(1) === '8')
+  }
 }

@@ -1,3 +1,5 @@
+import scala.collection.immutable.IndexedSeq
+import scala.collection.immutable.Range.Inclusive
 
 object Ocr {
   def scan(input: String): String = {
@@ -6,7 +8,7 @@ object Ocr {
     val line1: String = lines(0).take(3)
     val line2: String = lines(1).take(3)
     val line3: String = lines(2).take(3)
-    line1 + line2 + line3 match {
+    val accountNumberDigit: String = line1 + line2 + line3 match {
       case digit if digit == zero => "0"
       case digit if digit == one => "1"
       case digit if digit == two => "2"
@@ -18,6 +20,7 @@ object Ocr {
       case digit if digit == eight => "8"
       case digit if digit == nine => "9"
     }
+    (1 to 9).foldLeft("")((acc, _) => acc + accountNumberDigit)
   }
 
   val zero = "" +
