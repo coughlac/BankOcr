@@ -9,10 +9,10 @@
 //Each entry is 4 lines long, and each line has 27 characters. The first 3 lines of each entry contain an account number written using pipes and underscores, and the fourth line is blank. Each account number should have 9 digits, all of which should be in the range 0-9. A normal file contains around 500 entries.
 //
 //Your first task is to write a program that can take this file and parse it into actual account numbers.
-class Acceptance extends org.scalatest.FunSuite{
+class Acceptance extends org.scalatest.FunSuite {
 
 
-  test("recognises account number of all zeros"){
+  test("recognises account number of all zeros") {
     val input = "" +
       " _  _  _  _  _  _  _  _  _ \n" +
       "| || || || || || || || || |\n" +
@@ -23,54 +23,113 @@ class Acceptance extends org.scalatest.FunSuite{
     assert(accountNumber === "000000000")
   }
 
+  test("recognises account number of all ones") {
+    val input = "" +
+      "                           \n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
 
-//  |  |  |  |  |  |  |  |  |
-//  |  |  |  |  |  |  |  |  |
-//
-//  => 111111111
-//  _  _  _  _  _  _  _  _  _
-//  _| _| _| _| _| _| _| _| _|
-// |_ |_ |_ |_ |_ |_ |_ |_ |_
-//
-//  => 222222222
-//  _  _  _  _  _  _  _  _  _
-//  _| _| _| _| _| _| _| _| _|
-//  _| _| _| _| _| _| _| _| _|
-//
-//  => 333333333
-//
-//  |_||_||_||_||_||_||_||_||_|
-//    |  |  |  |  |  |  |  |  |
-//
-//  => 444444444
-//   _  _  _  _  _  _  _  _  _
-//  |_ |_ |_ |_ |_ |_ |_ |_ |_
-//   _| _| _| _| _| _| _| _| _|
-//
-//  => 555555555
-//   _  _  _  _  _  _  _  _  _
-//  |_ |_ |_ |_ |_ |_ |_ |_ |_
-//  |_||_||_||_||_||_||_||_||_|
-//
-//  => 666666666
-// _  _  _  _  _  _  _  _  _
-//  |  |  |  |  |  |  |  |  |
-//  |  |  |  |  |  |  |  |  |
-//
-//  => 777777777
-//   _  _  _  _  _  _  _  _  _
-//  |_||_||_||_||_||_||_||_||_|
-//  |_||_||_||_||_||_||_||_||_|
-//
-//  => 888888888
-//  _  _  _  _  _  _  _  _  _
-// |_||_||_||_||_||_||_||_||_|
-//  _| _| _| _| _| _| _| _| _|
-//
-//  => 999999999
-//    _  _     _  _  _  _  _
-//  | _| _||_||_ |_   ||_||_|
-//  ||_  _|  | _||_|  ||_| _|
-//
-//  => 123456789
+    assert(accountNumber === "111111111")
+  }
+
+  test("recognises account number of all twos") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      " _| _| _| _| _| _| _| _| _|\n" +
+      "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "222222222")
+  }
+
+  test("recognises account number of all threes") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _  \n" +
+      " _| _| _| _| _| _| _| _| _| \n" +
+      " _| _| _| _| _| _| _| _| _| \n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "333333333")
+  }
+
+  test("recognises account number of all fours") {
+    val input = "" +
+      "                           \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "444444444")
+  }
+
+  test("recognises account number of all fives") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
+      " _| _| _| _| _| _| _| _| _|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "555555555")
+  }
+
+  test("recognises account number of all sixs") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "666666666")
+  }
+
+  test("recognises account number of all sevens") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "777777777")
+  }
+
+  test("recognises account number of all eights") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "888888888")
+  }
+
+  test("recognises account number of all nines") {
+    val input = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      " _| _| _| _| _| _| _| _| _|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "999999999")
+  }
+
+  test("recognises account number of different digits") {
+    val input = "" +
+      "    _  _     _  _  _  _  _ \n" +
+      "  | _| _||_||_ |_   ||_||_|\n" +
+      "  ||_  _|  | _||_|  ||_| _|\n" +
+      "\n"
+    val accountNumber = Ocr.scan(input)
+
+    assert(accountNumber === "123456789")
+  }
 }
