@@ -20,7 +20,7 @@ object Ocr {
       case digit if digit == eight => "8"
       case digit if digit == nine => "9"
     }
-    (1 to 9).foldLeft("")((acc, _) => acc + accountNumberDigit)
+    accountNumberDigit * 9
   }
 
   val zero = "" +
