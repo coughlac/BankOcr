@@ -1,19 +1,20 @@
-
+import scala.annotation.tailrec
 
 object Ocr {
   def scan(input: String): String = {
     //need the first 3 chars of the first 3 lines
     val lines = input.split('\n')
-
-    val digit = for {
-      start <- 0 to (lines(0).length-1) by 3
-    } yield parseDigit(lines, start)
-    digit.mkString
+    val line0 = lines(0).grouped(3).toList
+    val line1 = lines(1).grouped(3).toList
+    val line2 = lines(2).grouped(3).toList
+    parse("", line0, line1, line2)
   }
 
-  def parseDigit(lines: Array[String], start: Int): String = {
-    val entryDigit = (0 to 2).foldLeft("")((acc, index) => acc + lines(index).substring(start, start + 3))
-    toDigit(entryDigit)
+  @tailrec
+  def parse(accountNumber: String, l0: List[String], l1: List[String], l2: List[String]): String = {
+    if (l0.isEmpty)
+      accountNumber
+    else parse(accountNumber + toDigit(l0.head + l1.head + l2.head), l0.tail, l1.tail, l2.tail)
   }
 
   def toDigit(entry: String): String = {
