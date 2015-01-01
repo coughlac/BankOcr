@@ -1,23 +1,18 @@
-import scala.collection.immutable.IndexedSeq
+
 
 object Ocr {
   def scan(input: String): String = {
     //need the first 3 chars of the first 3 lines
     val lines = input.split('\n')
 
-    val digit: IndexedSeq[String] = for {
-      n <- 0 to 8
-      start <- 0 to 26 by 3
+    val digit = for {
+      start <- 0 to (lines(0).length-1) by 3
     } yield parseDigit(lines, start)
     digit.mkString
   }
 
   def parseDigit(lines: Array[String], start: Int): String = {
-    // val entryDigit: String = (start to start + 2).foldLeft("")((acc, index) => acc + lines(index).take(3))
-    val line1 = lines(0).substring(start, start + 3)
-    val line2 = lines(1).substring(start, start + 3)
-    val line3 = lines(2).substring(start, start + 3)
-    val entryDigit = line1 + line2 + line3
+    val entryDigit = (0 to 2).foldLeft("")((acc, index) => acc + lines(index).substring(start, start + 3))
     toDigit(entryDigit)
   }
 

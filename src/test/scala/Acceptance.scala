@@ -50,9 +50,9 @@ class Acceptance extends org.scalatest.FunSuite {
 
   test("recognises account number of all threes") {
     val input = "" +
-      " _  _  _  _  _  _  _  _  _  \n" +
-      " _| _| _| _| _| _| _| _| _| \n" +
-      " _| _| _| _| _| _| _| _| _| \n" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      " _| _| _| _| _| _| _| _| _|\n" +
+      " _| _| _| _| _| _| _| _| _|\n" +
       "\n"
     val accountNumber = Ocr.scan(input)
 
