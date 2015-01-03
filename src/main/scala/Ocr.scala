@@ -1,24 +1,31 @@
 import scala.annotation.tailrec
 
 object Ocr {
-  def scan(input: String): String = {
-    //need the first 3 chars of the first 3 lines
-    val lines = input.split('\n')
-    val line0 = lines(0).grouped(3).toList
-    val line1 = lines(1).grouped(3).toList
-    val line2 = lines(2).grouped(3).toList
-    parse("", line0, line1, line2)
+  type PartialDigits = List[String]
+  type Entry = List[String]
+
+  def scan(input: String): List[String] = {
+    val entries: List[Entry] = input.split('\n').toList.grouped(4).toList
+    entries.map(accountNumber)
   }
 
-  @tailrec
-  def parse(accountNumber: String, l0: List[String], l1: List[String], l2: List[String]): String = {
-    if (l0.isEmpty)
-      accountNumber
-    else parse(accountNumber + toDigit(l0.head + l1.head + l2.head), l0.tail, l1.tail, l2.tail)
+  def accountNumber(entry: Entry): String = {
+    def toPartialDigits(entryPart: String): PartialDigits = {
+      entryPart.grouped(3).toList
+    }
+
+    @tailrec
+    def parse(accountNumber: String, l0: PartialDigits, l1: PartialDigits, l2: PartialDigits): String = {
+      if (l0.isEmpty)
+        accountNumber
+      else parse(accountNumber + toAccountNumberDigit(l0.head + l1.head + l2.head), l0.tail, l1.tail, l2.tail)
+    }
+
+    parse("", toPartialDigits(entry(0)), toPartialDigits(entry(1)), toPartialDigits(entry(2)))
   }
 
-  def toDigit(entry: String): String = {
-    entry match {
+  private def toAccountNumberDigit(entryDigit: String): String = {
+    entryDigit match {
       case digit if digit == zero => "0"
       case digit if digit == one => "1"
       case digit if digit == two => "2"
@@ -32,55 +39,53 @@ object Ocr {
     }
   }
 
-  val zero = "" +
+  private val zero = "" +
     " _ " +
     "| |" +
     "|_|"
 
-  val one = "" +
+  private val one = "" +
     "   " +
     "  |" +
     "  |"
 
-  val two = "" +
+  private val two = "" +
     " _ " +
     " _|" +
     "|_ "
 
-  val three = "" +
+  private val three = "" +
     " _ " +
     " _|" +
     " _|"
 
-  val four = "" +
+  private val four = "" +
     "   " +
     "|_|" +
     "  |"
 
-  val five = "" +
+  private val five = "" +
     " _ " +
     "|_ " +
     " _|"
 
-  val six = "" +
+  private val six = "" +
     " _ " +
     "|_ " +
     "|_|"
 
-  val seven = "" +
+  private val seven = "" +
     " _ " +
     "  |" +
     "  |"
 
-  val eight = "" +
+  private val eight = "" +
     " _ " +
     "|_|" +
     "|_|"
 
-  val nine = "" +
+  private val nine = "" +
     " _ " +
     "|_|" +
     " _|"
-
-
 }
