@@ -1,17 +1,9 @@
 import scala.annotation.tailrec
 
 object Ocr {
-  def isValidAccountNumber(accountNumber: String) :Boolean = {
-    //(d1+2*d2+3*d3 +..+9*d9) mod 11 = 0
-    ((accountNumber.charAt(0).asDigit * 9 +
-      accountNumber.charAt(1).asDigit * 8 +
-      accountNumber.charAt(2).asDigit * 7 +
-      accountNumber.charAt(3).asDigit * 6 +
-      accountNumber.charAt(4).asDigit * 5 +
-      accountNumber.charAt(5).asDigit * 4 +
-      accountNumber.charAt(6).asDigit * 3 +
-      accountNumber.charAt(7).asDigit * 2 +
-      accountNumber.charAt(8).asDigit * 1 ) % 11) == 0
+  def isValidAccountNumber(accountNumber: String): Boolean = {
+    val sumOfProduct: Int = (1 to 9).foldLeft(0)((acc, index) => acc + (accountNumber.charAt(9 - index).asDigit * index))
+    sumOfProduct % 11 == 0
   }
 
   type PartialDigits = List[String]
