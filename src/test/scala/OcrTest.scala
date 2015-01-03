@@ -135,4 +135,12 @@ class OcrTest extends org.scalatest.FunSuite {
     assert(accountNumber.contains("989999999"))
     assert(accountNumber.contains("777777777"))
   }
+
+  test("indicates that an account number is valid"){
+    assert(Ocr.isValidAccountNumber("345882865"))
+  }
+
+  test("indicates that an account number is invalid"){
+    assert(!Ocr.isValidAccountNumber("999888777"))
+  }
 }
