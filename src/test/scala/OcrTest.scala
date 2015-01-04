@@ -144,7 +144,6 @@ class OcrTest extends org.scalatest.FunSuite {
     assert(!Ocr.isValidAccountNumber("999888777"))
   }
 
-
   test("valid account number is output with no suffix") {
     val input = "" +
       " _  _  _  _  _  _  _  _    \n" +
