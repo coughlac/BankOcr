@@ -11,7 +11,10 @@ object Ocr {
 
   def scan(input: String): List[String] = {
     val entries: List[Entry] = input.split('\n').toList.grouped(4).toList
-    entries.map(accountNumber)
+    entries.map(entry => {
+      val accNo = accountNumber(entry)
+      accNo + suffix(accNo).getOrElse("")
+    })
   }
 
   def accountNumber(entry: Entry): String = {
@@ -29,6 +32,14 @@ object Ocr {
     parse("", toPartialDigits(entry(0)), toPartialDigits(entry(1)), toPartialDigits(entry(2)))
   }
 
+  private def suffix(accountNumber: String): Option[String] =
+    if (accountNumber.contains("?"))
+      Some(" ILL")
+    else if (!isValidAccountNumber(accountNumber))
+      Some(" ERR")
+    else
+      None
+
   private def toAccountNumberDigit(entryDigit: String): String = {
     entryDigit match {
       case digit if digit == zero => "0"
@@ -41,6 +52,7 @@ object Ocr {
       case digit if digit == seven => "7"
       case digit if digit == eight => "8"
       case digit if digit == nine => "9"
+      case _ => "?"
     }
   }
 

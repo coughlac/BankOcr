@@ -12,7 +12,7 @@
 // Each account number should have 9 digits, all of which should be in the range 0-9. A normal file contains around 500 entries.
 //
 //Your first task is to write a program that can take this file and parse it into actual account numbers.
-class Acceptance extends org.scalatest.FunSuite {
+class AcceptanceTest extends org.scalatest.FunSuite {
 
 
   test("recognises account number of all zeros") {
@@ -21,9 +21,9 @@ class Acceptance extends org.scalatest.FunSuite {
       "| || || || || || || || || |\n" +
       "|_||_||_||_||_||_||_||_||_|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.contains("000000000"))
+    assert(accountNumbers.exists(_.startsWith("000000000")))
   }
 
   test("recognises account number of all ones") {
@@ -32,10 +32,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "  |  |  |  |  |  |  |  |  |\n" +
       "  |  |  |  |  |  |  |  |  |\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("111111111"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("111111111")))
   }
 
   test("recognises account number of all twos") {
@@ -44,10 +44,10 @@ class Acceptance extends org.scalatest.FunSuite {
       " _| _| _| _| _| _| _| _| _|\n" +
       "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("222222222"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("222222222")))
   }
 
   test("recognises account number of all threes") {
@@ -56,10 +56,10 @@ class Acceptance extends org.scalatest.FunSuite {
       " _| _| _| _| _| _| _| _| _|\n" +
       " _| _| _| _| _| _| _| _| _|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("333333333"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("333333333")))
   }
 
   test("recognises account number of all fours") {
@@ -68,10 +68,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "|_||_||_||_||_||_||_||_||_|\n" +
       "  |  |  |  |  |  |  |  |  |\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("444444444"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("444444444")))
   }
 
   test("recognises account number of all fives") {
@@ -80,10 +80,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
       " _| _| _| _| _| _| _| _| _|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("555555555"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("555555555")))
   }
 
   test("recognises account number of all sixs") {
@@ -92,10 +92,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "|_ |_ |_ |_ |_ |_ |_ |_ |_ \n" +
       "|_||_||_||_||_||_||_||_||_|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("666666666"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("666666666")))
   }
 
   test("recognises account number of all sevens") {
@@ -104,10 +104,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "  |  |  |  |  |  |  |  |  |\n" +
       "  |  |  |  |  |  |  |  |  |\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("777777777"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("777777777")))
   }
 
   test("recognises account number of all eights") {
@@ -116,10 +116,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "|_||_||_||_||_||_||_||_||_|\n" +
       "|_||_||_||_||_||_||_||_||_|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("888888888"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("888888888")))
   }
 
   test("recognises account number of all nines") {
@@ -128,10 +128,10 @@ class Acceptance extends org.scalatest.FunSuite {
       "|_||_||_||_||_||_||_||_||_|\n" +
       " _| _| _| _| _| _| _| _| _|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("999999999"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("999999999")))
   }
 
   test("recognises account number of different digits") {
@@ -140,9 +140,9 @@ class Acceptance extends org.scalatest.FunSuite {
       "  | _| _||_||_ |_   ||_||_|\n" +
       "  ||_  _|  | _||_|  ||_| _|\n" +
       "\n"
-    val accountNumber = Ocr.scan(input)
+    val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumber.size === 1)
-    assert(accountNumber.contains("123456789"))
+    assert(accountNumbers.size === 1)
+    assert(accountNumbers.exists(_.startsWith("123456789")))
   }
 }
