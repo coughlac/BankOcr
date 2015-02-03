@@ -1,6 +1,44 @@
 import scala.annotation.tailrec
 
+object OcrApp  extends App {
+  override def main(args: Array[String]) {
+    println((100000000 to 199999999).find(i => {
+      val s: String = Integer.toString(i)
+      println(s)
+      val number: String = Ocr.correctAccountNumber(s)
+      println(number)
+      number.endsWith("ERR")
+    }))
+  }
+}
+
 object Ocr {
+
+  val alternativeDigits = Map('1' -> Set('7'), '2' -> Set.empty, '3'-> Set('9'),
+    '4' -> Set.empty, '5' -> Set('6', '9'), '6' -> Set('5', '8'),
+    '7' -> Set('1'), '8' -> Set('0', '6', '9'), '9' -> Set('3', '5', '8'), '0' -> Set('8')
+  )
+
+  def correctAccountNumber(accountNumber: String): String = {
+    def getAlternativeAccountNumbers = {
+      for {
+        index <- 0 to 8
+        alternative <- alternativeDigits(accountNumber.charAt(index))
+      } yield accountNumber.updated(index, alternative)
+    }
+    if(isValidAccountNumber(accountNumber))
+      accountNumber
+    else if (accountNumber.contains("?"))
+      accountNumber + " ILL"
+    else {
+      getAlternativeAccountNumbers.filter(isValidAccountNumber) match {
+        case validAccountNumbers if validAccountNumbers.size > 1 => accountNumber + " AMB"
+        case validAccountNumbers if validAccountNumbers.size == 1 => validAccountNumbers.head
+        case _ => accountNumber + " ERR"
+      }
+    }
+  }
+
   def isValidAccountNumber(accountNumber: String): Boolean = {
     val sumOfProduct: Int = (1 to 9).foldLeft(0)((acc, index) => acc + (accountNumber.charAt(9 - index).asDigit * index))
     sumOfProduct % 11 == 0
@@ -11,10 +49,7 @@ object Ocr {
 
   def scan(input: String): List[String] = {
     val entries: List[Entry] = input.split('\n').toList.grouped(4).toList
-    entries.map(entry => {
-      val accNo = accountNumber(entry)
-      accNo + suffix(accNo).getOrElse("")
-    })
+    entries.map(entry => correctAccountNumber(accountNumber(entry)))
   }
 
   def accountNumber(entry: Entry): String = {
@@ -32,13 +67,6 @@ object Ocr {
     parse("", toPartialDigits(entry(0)), toPartialDigits(entry(1)), toPartialDigits(entry(2)))
   }
 
-  private def suffix(accountNumber: String): Option[String] =
-    if (accountNumber.contains("?"))
-      Some(" ILL")
-    else if (!isValidAccountNumber(accountNumber))
-      Some(" ERR")
-    else
-      None
 
   private def toAccountNumberDigit(entryDigit: String): String = {
     entryDigit match {

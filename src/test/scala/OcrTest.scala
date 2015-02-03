@@ -13,9 +13,9 @@ class OcrTest extends org.scalatest.FunSuite {
 
   test("recognises a one") {
     val input = "" +
-      "                           \n" +
-      "  |  |  |  |  |  |  |  |  |\n" +
-      "  |  |  |  |  |  |  |  |  |\n" +
+      "    _  _  _  _  _  _  _  _ \n" +
+      "  || || || || || || || | _|\n" +
+      "  ||_||_||_||_||_||_||_||_ \n" +
       "\n"
     val accountNumbers = Ocr.scan(input)
 
@@ -126,14 +126,14 @@ class OcrTest extends org.scalatest.FunSuite {
       "|_||_||_||_||_||_||_||_||_|\n" +
       " _||_| _| _| _| _| _| _| _|\n" +
       "\n" +
-      " _  _  _  _  _  _  _  _  _ \n" +
-      "  |  |  |  |  |  |  |  |  |\n" +
-      "  |  |  |  |  |  |  |  |  |\n" +
+      "    _  _  _  _  _  _  _  _ \n" +
+      "  || || || || || || || | _|\n" +
+      "  ||_||_||_||_||_||_||_||_ \n" +
       "\n"
     val accountNumbers = Ocr.scan(input)
     assert(accountNumbers.size === 2)
     assert(accountNumbers.exists((accountNumber) => accountNumber.startsWith("989999999")))
-    assert(accountNumbers.exists((accountNumber) => accountNumber.startsWith("777777777")))
+    assert(accountNumbers.exists((accountNumber) => accountNumber.startsWith("100000002")))
   }
 
   test("indicates that an account number is valid") {
@@ -168,12 +168,53 @@ class OcrTest extends org.scalatest.FunSuite {
 
   test("identify invalid account number and indicate that the account number is invalid") {
     val input = "" +
-      " _  _     _  _        _  _ \n" +
-      "|_ |_ |_| _|  |  ||_||_||_ \n" +
-      "|_||_|  | _|  |  |  | _| _|\n" +
+      "    _  _  _  _  _  _  _  _ \n" +
+      "  || || || || || || || ||_ \n" +
+      "  ||_||_||_||_||_||_||_| _|\n" +
       "\n"
     val accountNumbers = Ocr.scan(input)
 
-    assert(accountNumbers(0) === "664371495 ERR")
+    assert(accountNumbers(0) === "100000005 ERR")
   }
+
+  test("correct invalid account number by adding or removing underscores or pipes from a digit ") {
+    val input = "" +
+      "                           \n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "\n"
+    val accountNumbers = Ocr.scan(input)
+
+    assert(accountNumbers(0) === "711111111")
+
+    val input2 = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "  |  |  |  |  |  |  |  |  |\n" +
+      "\n"
+    val accountNumbers2 = Ocr.scan(input2)
+
+    assert(accountNumbers2(0) === "777777177")
+
+    val input3 = "" +
+      " _  _  _  _  _  _  _  _  _ \n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "|_||_||_||_||_||_||_||_||_|\n" +
+      "\n"
+    val accountNumbers3 = Ocr.scan(input3)
+
+    assert(accountNumbers3(0) === "888888888 AMB")
+  }
+
+//  test("correct an illegal account number by adding or removing underscores or pipes from a digit") {
+//    val input = "" +
+//      "    _  _     _  _  _  _  _ \n" +
+//      " _| _| _||_||_ |_   ||_||_|\n" +
+//      "  ||_  _|  | _||_|  ||_| _|\n" +
+//      "\n"
+//
+//    val accountNumbers = Ocr.scan(input)
+//
+//    assert(accountNumbers(0) === "123456789")
+//  }
 }
