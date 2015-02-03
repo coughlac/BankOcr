@@ -5,7 +5,7 @@ object OcrApp  extends App {
     println((100000000 to 199999999).find(i => {
       val s: String = Integer.toString(i)
       println(s)
-      val number: String = Ocr.correctAccountNumber(s)
+      val number: String = Ocr.process(s)
       println(number)
       number.endsWith("ERR")
     }))
@@ -13,46 +13,15 @@ object OcrApp  extends App {
 }
 
 object Ocr {
-
-  val alternativeDigits = Map('1' -> Set('7'), '2' -> Set.empty, '3'-> Set('9'),
-    '4' -> Set.empty, '5' -> Set('6', '9'), '6' -> Set('5', '8'),
-    '7' -> Set('1'), '8' -> Set('0', '6', '9'), '9' -> Set('3', '5', '8'), '0' -> Set('8')
-  )
-
-  def correctAccountNumber(accountNumber: String): String = {
-    def getAlternativeAccountNumbers = {
-      for {
-        index <- 0 to 8
-        alternative <- alternativeDigits(accountNumber.charAt(index))
-      } yield accountNumber.updated(index, alternative)
-    }
-    if(isValidAccountNumber(accountNumber))
-      accountNumber
-    else if (accountNumber.contains("?"))
-      accountNumber + " ILL"
-    else {
-      getAlternativeAccountNumbers.filter(isValidAccountNumber) match {
-        case validAccountNumbers if validAccountNumbers.size > 1 => accountNumber + " AMB"
-        case validAccountNumbers if validAccountNumbers.size == 1 => validAccountNumbers.head
-        case _ => accountNumber + " ERR"
-      }
-    }
-  }
-
-  def isValidAccountNumber(accountNumber: String): Boolean = {
-    val sumOfProduct: Int = (1 to 9).foldLeft(0)((acc, index) => acc + (accountNumber.charAt(9 - index).asDigit * index))
-    sumOfProduct % 11 == 0
-  }
-
   type PartialDigits = List[String]
   type Entry = List[String]
 
   def scan(input: String): List[String] = {
-    val entries: List[Entry] = input.split('\n').toList.grouped(4).toList
-    entries.map(entry => correctAccountNumber(accountNumber(entry)))
+    val entries = input.split('\n').toList.grouped(4).toList
+    entries.map(entry => process(accountNumber(entry)))
   }
 
-  def accountNumber(entry: Entry): String = {
+  def accountNumber(entry: Entry) = {
     def toPartialDigits(entryPart: String): PartialDigits = {
       entryPart.grouped(3).toList
     }
@@ -67,8 +36,7 @@ object Ocr {
     parse("", toPartialDigits(entry(0)), toPartialDigits(entry(1)), toPartialDigits(entry(2)))
   }
 
-
-  private def toAccountNumberDigit(entryDigit: String): String = {
+  private def toAccountNumberDigit(entryDigit: String) = {
     entryDigit match {
       case digit if digit == zero => "0"
       case digit if digit == one => "1"
@@ -83,6 +51,37 @@ object Ocr {
       case _ => "?"
     }
   }
+
+  def process(accountNumber: String): String = {
+    if(isValidAccountNumber(accountNumber))
+    accountNumber
+    else if (accountNumber.contains("?"))
+    accountNumber + " ILL"
+    else {
+      getAlternativeAccountNumbers(accountNumber).filter(isValidAccountNumber) match {
+        case validAccountNumbers if validAccountNumbers.size > 1 => accountNumber + " AMB"
+        case validAccountNumbers if validAccountNumbers.size == 1 => validAccountNumbers.head
+        case _ => accountNumber + " ERR"
+      }
+    }
+  }
+
+  def isValidAccountNumber(accountNumber: String) = {
+    val sumOfProduct: Int = (1 to 9).foldLeft(0)((acc, index) => acc + (accountNumber.charAt(9 - index).asDigit * index))
+    sumOfProduct % 11 == 0
+  }
+
+  private def getAlternativeAccountNumbers(accountNumber: String) = {
+    for {
+      index <- 0 to 8
+      alternative <- alternativeDigits(accountNumber.charAt(index))
+    } yield accountNumber.updated(index, alternative)
+  }
+
+  private val alternativeDigits = Map('1' -> Set('7'), '2' -> Set.empty, '3'-> Set('9'),
+    '4' -> Set.empty, '5' -> Set('6', '9'), '6' -> Set('5', '8'),
+    '7' -> Set('1'), '8' -> Set('0', '6', '9'), '9' -> Set('3', '5', '8'), '0' -> Set('8')
+  )
 
   private val zero = "" +
     " _ " +
